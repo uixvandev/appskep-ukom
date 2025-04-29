@@ -7,26 +7,32 @@
 
 import Foundation
 
-class TokenManager {
-    private static let tokenKey = "auth_token"
-    
+final class TokenManager {
+    private static let accessTokenKey = "accessToken"
+    private static let hasSeenOnboardingKey = "hasSeenOnboarding"
+
     static func saveToken(_ token: String) {
-        print("💾 Menyimpan token: \(token.prefix(10))...")
-        UserDefaults.standard.set(token, forKey: tokenKey)
+        UserDefaults.standard.set(token, forKey: accessTokenKey)
     }
-    
+
     static func getToken() -> String? {
-        let token = UserDefaults.standard.string(forKey: tokenKey)
-        if let token = token {
-            print("🔐 Mengambil token: \(token.prefix(10))...")
-        } else {
-            print("⚠️ Tidak ada token yang ditemukan di penyimpanan")
-        }
-        return token
+        UserDefaults.standard.string(forKey: accessTokenKey)
+    }
+
+    static func clearToken() {
+        UserDefaults.standard.removeObject(forKey: accessTokenKey)
     }
     
-    static func clearToken() {
-        UserDefaults.standard.removeObject(forKey: tokenKey)
-        print("🗑️ Token dihapus dari penyimpanan")
+    // Add methods to track onboarding status
+    static func markOnboardingAsSeen() {
+        UserDefaults.standard.set(true, forKey: hasSeenOnboardingKey)
+    }
+    
+    static func hasSeenOnboarding() -> Bool {
+        UserDefaults.standard.bool(forKey: hasSeenOnboardingKey)
+    }
+    
+    static func resetOnboardingStatus() {
+        UserDefaults.standard.set(false, forKey: hasSeenOnboardingKey)
     }
 }

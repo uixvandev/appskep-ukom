@@ -12,18 +12,27 @@ struct SplashView: View {
     
     var body: some View {
         Group {
-          if splashVM.isAuthenticated {
+            if splashVM.isAuthenticated {
+                // User is logged in, show profile
                 ProfileView(logoutAction: splashVM.logout)
+            } else if splashVM.hasSeenOnboarding {
+                // User has seen onboarding but not logged in, show login
+                LoginView(onLoginSuccess: {
+                    splashVM.checkAuthentication()
+                })
             } else {
-                LoginView(onLoginSuccess: splashVM.checkAuthentication)
+                // First-time user, show onboarding
+                OnboardingView(onComplete: {
+                    splashVM.completeOnboarding()
+                })
             }
         }
         .onAppear {
             splashVM.checkAuthentication()
+            splashVM.checkOnboardingStatus()
         }
     }
 }
-
 
 #Preview {
     SplashView()

@@ -9,21 +9,29 @@ import Foundation
 
 @MainActor
 final class SplashViewModel: ObservableObject {
-  @Published var isAuthenticated: Bool = false
-  
-  init() {
-    checkAuthentication()
-  }
-  
-  func checkAuthentication() {
-    let hasToken = TokenManager.getToken() != nil
-    print("🔑 Token exists: \(hasToken)")
-    isAuthenticated = hasToken
-  }
-  
-  func logout() {
-    TokenManager.clearToken()
-    isAuthenticated = false
-    print("🚪 User logged out")
-  }
+    @Published var isAuthenticated: Bool = false
+    @Published var hasSeenOnboarding: Bool = false
+    
+    init() {
+        checkAuthentication()
+        checkOnboardingStatus()
+    }
+    
+    func checkAuthentication() {
+        isAuthenticated = TokenManager.getToken() != nil
+    }
+    
+    func checkOnboardingStatus() {
+        hasSeenOnboarding = TokenManager.hasSeenOnboarding()
+    }
+    
+    func logout() {
+        TokenManager.clearToken()
+        isAuthenticated = false
+    }
+    
+    func completeOnboarding() {
+        TokenManager.markOnboardingAsSeen()
+        hasSeenOnboarding = true
+    }
 }

@@ -7,15 +7,12 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
-    @State private var showingRegister = false
     var onLoginSuccess: (() -> Void)?
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 20) {
                 Image("Logo")
                     .resizable()
@@ -42,7 +39,7 @@ struct LoginView: View {
                     ProgressView()
                         .padding()
                 } else {
-                    Button("Login") {
+                    Button {
                         Task {
                             await viewModel.login()
                             if viewModel.user != nil {
@@ -50,8 +47,9 @@ struct LoginView: View {
                                 onLoginSuccess?()
                             }
                         }
+                    } label: {
+                        CustomLongButton(title: "Masuk", titleColor: .white, bgButtonColor: .blue100)
                     }
-                    .buttonStyle(.borderedProminent)
                     .padding()
                 }
                 
@@ -68,6 +66,7 @@ struct LoginView: View {
                 } label: {
                     Text("Belum punya akun? Daftar")
                         .font(.footnote)
+                        .foregroundColor(.blue100)
                 }
                 .padding()
                 
@@ -75,7 +74,7 @@ struct LoginView: View {
             }
             .padding()
             .navigationTitle("Login")
-            .navigationBarHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
