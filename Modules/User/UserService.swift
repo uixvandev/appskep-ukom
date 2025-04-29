@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class UserService {
+class UserService {
     func fetchUserProfile() async throws -> User {
         let response: UserProfileResponse = try await APIService.shared.request(
           service: .auth,

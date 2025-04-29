@@ -7,61 +7,76 @@
 
 import SwiftUI
 
+import SwiftUI
+
 struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
+    @State private var showingRegister = false
     var onLoginSuccess: (() -> Void)?
     
     var body: some View {
-        VStack(spacing: 20) {
-            Image("Logo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 120)
-                .padding(.vertical, 20)
-            
-            Text("Login to Appskep")
-                .font(.title)
-                .fontWeight(.bold)
-            
-            TextField("Email", text: $viewModel.email)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .disableAutocorrection(true)
-                .autocapitalization(.none)
-                .keyboardType(.emailAddress)
-                .padding(.horizontal)
-            
-            SecureField("Password", text: $viewModel.password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding(.horizontal)
-            
-            if viewModel.isLoading {
-                ProgressView()
-                    .padding()
-            } else {
-                Button("Login") {
-                    Task {
-                        await viewModel.login()
-                        if viewModel.user != nil {
-                            print("👤 User logged in, calling success handler")
-                            onLoginSuccess?()
+        NavigationView {
+            VStack(spacing: 20) {
+                Image("Logo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 120)
+                    .padding(.vertical, 20)
+                
+                Text("Login to Appskep")
+                    .font(.title)
+                    .fontWeight(.bold)
+                
+                TextField("Email", text: $viewModel.email)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .disableAutocorrection(true)
+                    .autocapitalization(.none)
+                    .keyboardType(.emailAddress)
+                    .padding(.horizontal)
+                
+                SecureField("Password", text: $viewModel.password)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+                
+                if viewModel.isLoading {
+                    ProgressView()
+                        .padding()
+                } else {
+                    Button("Login") {
+                        Task {
+                            await viewModel.login()
+                            if viewModel.user != nil {
+                                print("👤 User logged in, calling success handler")
+                                onLoginSuccess?()
+                            }
                         }
                     }
-                }
-                .buttonStyle(.borderedProminent)
-                .padding()
-            }
-            
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-                    .font(.caption)
-                    .multilineTextAlignment(.center)
+                    .buttonStyle(.borderedProminent)
                     .padding()
+                }
+                
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                }
+                
+                NavigationLink {
+                    RegisterView(onRegisterSuccess: onLoginSuccess)
+                } label: {
+                    Text("Belum punya akun? Daftar")
+                        .font(.footnote)
+                }
+                .padding()
+                
+                Spacer()
             }
-            
-            Spacer()
+            .padding()
+            .navigationTitle("Login")
+            .navigationBarHidden(true)
         }
-        .padding()
     }
 }
 
