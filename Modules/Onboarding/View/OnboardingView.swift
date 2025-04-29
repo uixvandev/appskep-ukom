@@ -31,17 +31,15 @@ struct OnboardingView: View {
             
             VStack(spacing: 16) {
                 Button {
-                    // Mark onboarding as complete and show login
                     onComplete?()
                 } label: {
-                    CustomLongButton(title: "Masuk", titleColor: Color.white, bgButtonColor: Color.blue100)
+                    CustomLongButton(title: "Daftar", titleColor: Color.white, bgButtonColor: Color.blue100)
                 }
                 
                 Button {
-                    // Mark onboarding as complete and show register
                     onComplete?()
                 } label: {
-                    CustomLongButton(title: "Daftar", titleColor: Color.blue100, bgButtonColor: Color.blue10)
+                    CustomLongButton(title: "Masuk", titleColor: Color.blue100, bgButtonColor: Color.blue10)
                 }
             }
             .padding(.bottom, 32)
