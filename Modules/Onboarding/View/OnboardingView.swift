@@ -14,6 +14,10 @@ struct OnboardingView: View {
     
     var body: some View {
         VStack {
+          Image("LogoHorizontal")
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(width: 200, height: 80)
             TabView(selection: $selectedTab) {
                 ForEach(tabs) { tab in
                     Group {
