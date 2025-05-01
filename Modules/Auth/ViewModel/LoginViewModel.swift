@@ -20,6 +20,7 @@ final class LoginViewModel: ObservableObject {
     func login() async {
         isLoading = true
         errorMessage = nil
+      
         do {
           let user = try await authService.login(email: email, password: password)
             self.user = user

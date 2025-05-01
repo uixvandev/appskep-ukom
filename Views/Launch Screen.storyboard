@@ -52,7 +52,7 @@
         <image name="KemenkesLogo" width="3530" height="617"/>
         <image name="Logo" width="661" height="661"/>
         <namedColor name="AccentColor">
-            <color red="0.0" green="0.51764705882352946" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.63137254901960782" blue="0.96078431372549022" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

@@ -8,21 +8,21 @@
 import Foundation
 
 struct AuthResponseModel: Codable {
-    let message: Message
-    let data: AuthData?
-    let error: String?
+  let message: Message
+  let data: AuthData?
+  let error: String?
 }
 
 struct Message: Codable {
-    let success: String
+  let success: String
 }
 
 struct AuthData: Codable {
-    let accessToken: String
-    let user: User
-
-    enum CodingKeys: String, CodingKey {
-        case accessToken = "access_token"
-        case user
-    }
+  let accessToken: String
+  let user: User
+  
+  enum CodingKeys: String, CodingKey {
+    case accessToken = "access_token"
+    case user
+  }
 }

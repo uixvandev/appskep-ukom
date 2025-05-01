@@ -10,6 +10,7 @@ import SwiftUI
 struct LoginView: View {
   @StateObject private var viewModel = LoginViewModel()
   var onLoginSuccess: (() -> Void)?
+  @State private var showErrorAlert = false
   
   var body: some View {
     NavigationStack {
@@ -58,19 +59,13 @@ struct LoginView: View {
               if viewModel.user != nil {
                 print("👤 User logged in, calling success handler")
                 onLoginSuccess?()
+              } else if viewModel.errorMessage != nil {
+                showErrorAlert = true
               }
             }
           } label: {
             CustomLongButton(title: "Masuk", titleColor: .white, bgButtonColor: .main)
           }
-        }
-        
-        if let errorMessage = viewModel.errorMessage {
-          Text(errorMessage)
-            .foregroundColor(.red)
-            .font(.caption)
-            .multilineTextAlignment(.center)
-            .padding()
         }
         
         NavigationLink {
@@ -99,6 +94,16 @@ struct LoginView: View {
       }
       .padding()
       .navigationBarBackButtonHidden(true)
+      .alert("Login Gagal", isPresented: $showErrorAlert) {
+        Button("OK", role: .cancel) { }
+      } message: {
+        Text(viewModel.errorMessage ?? "Terjadi Kesalahan saat login")
+      }
+      .onChange(of: viewModel.errorMessage) { _, newValue in
+        if newValue != nil {
+          showErrorAlert = true
+        }
+      }
     }
   }
 }
