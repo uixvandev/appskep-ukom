@@ -18,13 +18,13 @@ struct OnboardingSingleView: View {
         
         VStack(spacing: 16) {
           Text(content.title)
-            .font(.title3)
+            .font(.title)
             .fontWeight(.bold)
-            .foregroundStyle(.dark)
+            .foregroundStyle(.neutral100)
           
           Text(content.subtitle)
-            .font(.subheadline)
-            .foregroundStyle(.light20)
+            .font(.body)
+            .foregroundStyle(.neutral80)
             .lineSpacing(4)
         }
         .frame(width: 371)
@@ -34,5 +34,5 @@ struct OnboardingSingleView: View {
 }
 
 #Preview {
-  OnboardingSingleView(content: Onboarding.data[0])
+  OnboardingSingleView(content: Onboarding.data[1])
 }

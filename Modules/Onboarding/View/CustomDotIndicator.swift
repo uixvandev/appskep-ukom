@@ -15,7 +15,7 @@ struct CustomDotIndicator: View {
     HStack {
       ForEach(0..<count, id: \.self) { tab in
         Circle()
-          .fill(tab == selectedTab ? Color(.blue100) : Color(.blue10))
+          .fill(tab == selectedTab ? Color(.main) : Color(.surface))
           .scaleEffect(tab == selectedTab ? 2.0 : 1.0)
           .frame(width: 8, height: 8)
           .padding(.horizontal, 4)

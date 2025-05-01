@@ -20,7 +20,7 @@ extension Onboarding {
         Onboarding(
             image: "Onboarding1",
             title: "Belajar Kesehatan Jadi Mudah!",
-            subtitle: "Aplikasi bimbel kesehatan No. 1 di Indonesia dengan tingkat kelulusan kompetensi hingga 93%.",
+            subtitle: "Aplikasi bimbel kesehatan No.1 di Indonesia dengan tingkat kelulusan kompetensi 93%.",
             tag: 0
         ),
         

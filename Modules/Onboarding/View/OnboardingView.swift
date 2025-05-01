@@ -37,16 +37,17 @@ struct OnboardingView: View {
                 Button {
                     onComplete?()
                 } label: {
-                    CustomLongButton(title: "Daftar", titleColor: Color.white, bgButtonColor: Color.blue100)
+                    CustomLongButton(title: "Daftar", titleColor: Color.white, bgButtonColor: Color.main)
                 }
                 
                 Button {
                     onComplete?()
                 } label: {
-                    CustomLongButton(title: "Masuk", titleColor: Color.blue100, bgButtonColor: Color.blue10)
+                    CustomLongButton(title: "Masuk", titleColor: Color.main, bgButtonColor: Color.surface)
                 }
             }
-            .padding(.bottom, 32)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 40)
         }
     }
 }

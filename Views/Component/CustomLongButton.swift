@@ -19,7 +19,7 @@ struct CustomLongButton: View {
       .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
       .foregroundStyle(titleColor)
       .padding()
-      .frame(width: 343, height: 56)
+      .frame(maxWidth: .infinity, maxHeight: 56)
       .background{
         RoundedRectangle(cornerRadius: 16)
           .foregroundStyle(bgButtonColor)
@@ -28,5 +28,5 @@ struct CustomLongButton: View {
 }
 
 #Preview {
-  CustomLongButton(title: "Sign Up", titleColor: Color .white, bgButtonColor: Color.blue100)
+  CustomLongButton(title: "Sign Up", titleColor: Color .white, bgButtonColor: Color.main)
 }
