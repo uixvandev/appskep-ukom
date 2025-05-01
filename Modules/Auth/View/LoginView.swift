@@ -57,7 +57,8 @@ struct LoginView: View {
             Task {
               await viewModel.login()
               if viewModel.user != nil {
-                print("👤 User logged in, calling success handler")
+                print("👤 User berhasil login, memanggil handler sukses")
+                // Panggil handler sukses untuk navigasi ke MainView
                 onLoginSuccess?()
               } else if viewModel.errorMessage != nil {
                 showErrorAlert = true
@@ -69,9 +70,9 @@ struct LoginView: View {
         }
         
         NavigationLink {
-          
+          // Lupa Password View
         } label: {
-          Text("Lupa Pasword")
+          Text("Lupa Password")
             .font(.headline)
             .foregroundStyle(.main)
             .frame(maxWidth: .infinity, alignment: .center)
@@ -94,6 +95,7 @@ struct LoginView: View {
       }
       .padding()
       .navigationBarBackButtonHidden(true)
+      .ignoresSafeArea(.keyboard)
       .alert("Login Gagal", isPresented: $showErrorAlert) {
         Button("OK", role: .cancel) { }
       } message: {
