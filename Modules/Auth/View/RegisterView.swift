@@ -15,7 +15,7 @@ struct RegisterView: View {
   var onRegisterSuccess: (() -> Void)?
   
   var body: some View {
-    NavigationStack {
+    ScrollView {
       VStack(spacing: 24) {
         Image("IconRegister")
           .resizable()

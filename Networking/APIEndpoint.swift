@@ -13,6 +13,7 @@ enum APIEndpoint {
   case login
   case register
   case getUser
+  case updateUser
   
   //UKOM
   
@@ -26,6 +27,8 @@ enum APIEndpoint {
       return "/api/register"
     case .getUser:
       return "/user/me"
+    case .updateUser:
+      return "/user/update"
     }
   }
 }

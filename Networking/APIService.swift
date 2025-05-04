@@ -12,6 +12,7 @@ final class APIService {
     
     private init() {}
     
+    // Method untuk request yang mengembalikan model spesifik (tipe generic)
     func request<T: Codable>(
         service: APIEnvironment,
         endpoint: APIEndpoint,
@@ -115,11 +116,82 @@ final class APIService {
             throw error
         }
     }
-}
-
-// Extension to simplify logging path information
-extension CodingKey {
-    var pathDescription: String {
-        return stringValue
+    
+    // Method baru untuk request yang mengembalikan dictionary mentah
+    func requestRaw(
+        service: APIEnvironment,
+        endpoint: APIEndpoint,
+        method: String = "GET",
+        body: [String: Any]? = nil,
+        authenticated: Bool = false
+    ) async throws -> [String: Any] {
+        let url = service.baseURL.appendingPathComponent(endpoint.path)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = method
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        if authenticated {
+            if let token = TokenManager.getToken() {
+                print("🔑 Using token for authenticated request: \(token.prefix(15))...")
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            } else {
+                print("⚠️ Authenticated request but no token found!")
+            }
+        }
+        
+        if let body = body {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+        }
+        
+        // Debug print request details
+        print("🔄 Raw Request: \(method) \(url.absoluteString)")
+        if let body = body {
+            print("📦 Raw Request body: \(body)")
+        }
+        print("📋 Raw Headers: \(request.allHTTPHeaderFields ?? [:])")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("📡 Raw Status Code: \(httpResponse.statusCode)")
+                
+                // Print response body for debugging
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("📥 Raw Response: \(responseString)")
+                }
+                
+                if !(200...299).contains(httpResponse.statusCode) {
+                    let responseBody = String(data: data, encoding: .utf8) ?? "No response body"
+                    print("❌ Raw Error Response Body: \(responseBody)")
+                    
+                    // Jika error, coba ekstrak pesan dari JSON mentah
+                    if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                       let message = json["message"] as? [String: Any],
+                       let errorMessage = message["danger"] as? String {
+                        throw NSError(domain: "", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+                    }
+                    
+                    throw NSError(domain: "", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Server error: HTTP \(httpResponse.statusCode)"])
+                }
+            }
+            
+            // Parse respons langsung sebagai dictionary
+            do {
+                guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                    throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Response bukan JSON yang valid"])
+                }
+                
+                return json
+            } catch {
+                print("❌ Raw JSON parsing error: \(error)")
+                throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Gagal parsing JSON: \(error.localizedDescription)"])
+            }
+        } catch {
+            // Network or other errors
+            print("📶 Raw Network or request error: \(error.localizedDescription)")
+            throw error
+        }
     }
 }

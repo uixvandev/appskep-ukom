@@ -19,12 +19,12 @@ struct ProfileView: View {
                         // Profile Header
                         VStack(spacing: 12) {
                             Circle()
-                                .fill(Color.blue.opacity(0.2))
+                                .fill(Color.main.opacity(0.2))
                                 .frame(width: 100, height: 100)
                                 .overlay(
                                     Text(String(user.name.prefix(1)))
                                         .font(.system(size: 40, weight: .bold))
-                                        .foregroundColor(.blue)
+                                        .foregroundColor(.main)
                                 )
                             
                             Text(user.name)
@@ -50,6 +50,28 @@ struct ProfileView: View {
                         .cornerRadius(12)
                         .shadow(color: Color.black.opacity(0.05), radius: 5)
                         .padding(.horizontal)
+                        
+                        // Edit Profile Button
+                        NavigationLink {
+                            EditProfileView(user: user) { updatedUser in
+                                // Update the profile view with the updated user
+                                viewModel.user = updatedUser
+                            }
+                        } label: {
+                            HStack {
+                                Image(systemName: "pencil")
+                                Text("Edit Profil")
+                            }
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .foregroundStyle(Color.main)
+                            )
+                        }
+                        .padding(.top, 20)
+                        
                     } else if viewModel.isLoading {
                         VStack(spacing: 20) {
                             ProgressView()
@@ -87,11 +109,17 @@ struct ProfileView: View {
                     
                     Spacer()
                     
-                    Button("Logout") {
+                    Button {
                         logoutAction()
+                    } label: {
+                        CustomLongButton(
+                            title: "Logout",
+                            titleColor: .white,
+                            bgButtonColor: Color.red
+                        )
                     }
-                    .buttonStyle(.borderedProminent)
-                    .padding(.vertical, 30)
+                    .padding(.horizontal)
+                    .padding(.vertical, 20)
                 }
                 .padding()
             }
