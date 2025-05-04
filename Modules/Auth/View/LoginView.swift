@@ -41,7 +41,7 @@ struct LoginView: View {
         )
         .keyboardType(.emailAddress)
         .textInputAutocapitalization(.never)
-  
+        
         OutlineTextField(
           text: $viewModel.password,
           placeholder: "Masukkan Password",
@@ -79,7 +79,12 @@ struct LoginView: View {
         }
         
         NavigationLink {
-          RegisterView(onRegisterSuccess: onLoginSuccess)
+          RegisterView(onRegisterSuccess: { user in
+            // Create a new instance of SplashViewModel and update it
+            SplashViewModel.shared.markUserAsNewlyRegistered(user)
+            // Call our login success handler which will trigger authentication check
+            onLoginSuccess?()
+          })
         } label: {
           HStack {
             Text("Belum memiliki akun?")

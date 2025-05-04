@@ -11,12 +11,16 @@ struct SubfieldDropdownView: View {
     @Binding var selectedId: Int
     let subfields: [SubfieldItem]
     let isLoading: Bool
+  let showLabel: Bool = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
+          
+          if showLabel {
             Text("Bidang Keahlian")
-                .font(.headline)
-                .foregroundStyle(.neutral90)
+              .font(.headline)
+              .foregroundStyle(.neutral90)
+          }
             
             if isLoading {
                 HStack {

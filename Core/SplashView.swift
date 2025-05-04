@@ -8,32 +8,67 @@
 import SwiftUI
 
 struct SplashView: View {
-    @StateObject private var splashVM = SplashViewModel()
-    
-    var body: some View {
-        Group {
-            if splashVM.isAuthenticated {
-                // User sudah login, tampilkan MainView bukan ProfileView
-                MainView(logoutAction: splashVM.logout)
-            } else if splashVM.hasSeenOnboarding {
-                // User sudah melihat onboarding tapi belum login, tampilkan login
-                LoginView(onLoginSuccess: {
-                    splashVM.checkAuthentication()
-                })
-            } else {
-                // Pengguna pertama kali, tampilkan onboarding
-                OnboardingView(onComplete: {
-                    splashVM.completeOnboarding()
-                })
+  @ObservedObject private var splashVM = SplashViewModel.shared
+  @State private var isTransitioning = false
+  
+  var body: some View {
+    Group {
+      if splashVM.isAuthenticated {
+        if splashVM.isNewRegistration, let user = splashVM.newlyRegisteredUser {
+          // New user that needs to complete profile
+          ProfileCompletionView(user: user) {
+            // When profile completion is done
+            withAnimation(.easeInOut(duration: 0.3)) {
+              isTransitioning = true
             }
+            
+            // Add delay before navigating
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+              splashVM.markProfileCompleted()
+              splashVM.checkAuthentication()
+              
+              // Reset transition state
+              DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                isTransitioning = false
+              }
+            }
+          }
+          .opacity(isTransitioning ? 0 : 1)
+          .transition(.opacity)
+        } else {
+          // Regular authenticated user
+          MainView(logoutAction: splashVM.logout)
+            .transition(.opacity)
+            .animation(.easeInOut, value: splashVM.isAuthenticated)
         }
-        .onAppear {
+      } else if splashVM.hasSeenOnboarding {
+        // User sudah melihat onboarding tapi belum login, tampilkan login
+        LoginView(onLoginSuccess: {
+          withAnimation(.easeInOut) {
             splashVM.checkAuthentication()
-            splashVM.checkOnboardingStatus()
-        }
+          }
+        })
+        .transition(.opacity)
+        .animation(.easeInOut, value: splashVM.hasSeenOnboarding)
+      } else {
+        // Pengguna pertama kali, tampilkan onboarding
+        OnboardingView(onComplete: {
+          withAnimation(.easeInOut) {
+            splashVM.completeOnboarding()
+          }
+        })
+        .transition(.opacity)
+        .animation(.easeInOut, value: splashVM.hasSeenOnboarding)
+      }
     }
+    .onAppear {
+      splashVM.checkAuthentication()
+      splashVM.checkOnboardingStatus()
+      splashVM.checkProfileStatus()
+    }
+  }
 }
 
 #Preview {
-    SplashView()
+  SplashView()
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct UserProfileResponse: Codable {
+struct UserProfileResponseModel: Codable {
     let message: Message
     let data: UserProfileData
     let error: String?

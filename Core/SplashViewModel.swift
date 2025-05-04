@@ -11,12 +11,37 @@ import Foundation
 final class SplashViewModel: ObservableObject {
   @Published var isAuthenticated: Bool = false
   @Published var hasSeenOnboarding: Bool = false
+  @Published var isNewRegistration: Bool = false
+  @Published var newlyRegisteredUser: User?
   
   private static let onboardingKey = "hasSeenOnboarding"
+  private static let profileCompletedKey = "profileCompleted"
+  // Add a static shared instance property
+  static let shared = SplashViewModel()
   
   init() {
     checkAuthentication()
     checkOnboardingStatus()
+    checkProfileStatus()
+  }
+  func markUserAsNewlyRegistered(_ user: User) {
+      isNewRegistration = true
+      newlyRegisteredUser = user
+      // Remove any existing profile completed flag
+      UserDefaults.standard.removeObject(forKey: SplashViewModel.profileCompletedKey)
+  }
+
+  func markProfileCompleted() {
+      UserDefaults.standard.set(true, forKey: SplashViewModel.profileCompletedKey)
+      isNewRegistration = false
+      newlyRegisteredUser = nil
+  }
+
+  func checkProfileStatus() {
+      let profileCompleted = UserDefaults.standard.bool(forKey: SplashViewModel.profileCompletedKey)
+      if profileCompleted {
+          isNewRegistration = false
+      }
   }
   
   func checkAuthentication() {
