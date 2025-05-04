@@ -78,7 +78,24 @@ struct EditProfileView: View {
                             .pickerStyle(.segmented)
                         }
                         .padding(.vertical, 8)
-                        
+
+                      // Setelah field jenis kelamin
+                      SubfieldDropdownView(
+                          selectedId: $viewModel.subfieldId,
+                          subfields: viewModel.subfields,
+                          isLoading: viewModel.isLoadingSubfields
+                      )
+                      .padding(.vertical, 8)
+
+                      // Dan tambahkan pemanggilan loadSubfields di onAppear
+                      .onAppear {
+                          viewModel.setupWithUser(user)
+                          
+                          // Load subfields data
+                          Task {
+                              await viewModel.loadSubfields()
+                          }
+                      }
                         // Tambahkan field lain sesuai kebutuhan untuk institusi, provinsi, dll.
                     }
                     

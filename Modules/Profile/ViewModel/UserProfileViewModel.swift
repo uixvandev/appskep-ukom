@@ -19,7 +19,8 @@ final class UserProfileViewModel: ObservableObject {
     @Published var provinceId: Int = 0
     @Published var districtId: Int = 0
     @Published var subfieldId: Int = 0
-    
+    @Published var subfields: [SubfieldItem] = []
+    @Published var isLoadingSubfields: Bool = false
     // UI states
     @Published var isLoading: Bool = false
     @Published var isUpdating: Bool = false
@@ -118,4 +119,19 @@ final class UserProfileViewModel: ObservableObject {
         // Add more validation as needed
         return true
     }
+  
+  // Method untuk memuat data subfields
+  func loadSubfields() async {
+      isLoadingSubfields = true
+      
+      do {
+          subfields = try await userService.fetchSubfields()
+          print("✅ Berhasil memuat \(subfields.count) subfields")
+      } catch {
+          print("❌ Gagal memuat subfields: \(error.localizedDescription)")
+          errorMessage = "Gagal memuat data bidang keahlian"
+      }
+      
+      isLoadingSubfields = false
+  }
 }

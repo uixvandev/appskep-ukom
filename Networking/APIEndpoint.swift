@@ -14,7 +14,7 @@ enum APIEndpoint {
   case register
   case getUser
   case updateUser
-  
+  case getSubfield
   //UKOM
   
   
@@ -29,6 +29,8 @@ enum APIEndpoint {
       return "/user/me"
     case .updateUser:
       return "/user/update"
+    case .getSubfield:
+      return "/subfield"
     }
   }
 }
